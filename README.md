@@ -82,7 +82,7 @@ API:
 curl -X POST http://127.0.0.1:8000/admin/seed
 ```
 
-The seeding logic is idempotent and upserts by `question_id`.
+The seeding logic is unchanging and upserts by `question_id`.
 
 ## API Endpoints
 
