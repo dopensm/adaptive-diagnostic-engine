@@ -124,15 +124,11 @@ curl -X POST http://127.0.0.1:8000/sessions/<session_id>/study-plan
 
 ## Adaptive Algorithm
 
-The adaptive engine uses a simple 1D IRT-inspired update rule:
+The adaptive algorithm starts every student at a default ability score of `0.5`. Each question has a predefined difficulty score between `0.1` and `1.0`, and after every response the system compares the student’s current ability with the question difficulty using a simple 1D IRT-inspired logistic model.
 
-- each session starts at a baseline ability score of `0.5`
-- each question has a difficulty score from `0.1` to `1.0`
-- after each answer, the engine computes an expected probability of success using a logistic function over `ability - difficulty`
-- the ability score is updated by moving it toward `(observed - expected)` and then clamped to configured bounds
-- the next question is chosen from unanswered items closest to the current ability estimate, with light topic balancing to avoid repeatedly selecting one topic
+If the student answers correctly, their ability score increases, and if they answer incorrectly, it decreases. The size of the update depends on how expected the outcome was. A correct answer on a harder question increases ability more than a correct answer on an easy one, while an incorrect answer on an easy question lowers ability more than missing a hard question. The updated score is then added to a safe range so it stays between the configured floor and ceiling.
 
-This is intentionally simpler than a full calibrated psychometric IRT model, but it is deterministic, explainable, and appropriate for a demo assignment.
+For the next question, the engine selects an unanswered item whose difficulty is closest to the student’s updated ability score. It also applies light topic balancing so the test does not keep selecting too many questions from the same topic in a row. This makes the test progressively adapt to the student’s estimated proficiency while still covering a reasonable spread of topics.
 
 ## Study Plan Generation
 
@@ -157,7 +153,12 @@ The tests use an in-memory fake database for service and API flow coverage, so t
 
 ## AI Log
 
-AI tools were used to speed up implementation planning, scaffolding, and iterative code generation. They were also used to help structure the adaptive-engine logic, test coverage, and README content.
+AI tools were used to speed up planning and implementation of the project. They helped in organizing the project structure, refining parts of the FastAPI API design, and improving documentation wording. Most of the implementation work, debugging, and testing flow still depended on manual review and local verification. 
+
+The main challenges AI could not solve on its own were environment-specific issues. In particular, dependency compatibility on Python 3.14 required manual adjustment of package versions, and MongoDB connectivity had to be debugged based on the local machine setup. AI could suggest likely fixes, but verifying runtime behavior, checking installed tools, and resolving infrastructure issues still required direct manual validation.
+
+
+
 
 Challenges that still require human review:
 
