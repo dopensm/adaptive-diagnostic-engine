@@ -157,11 +157,35 @@ AI tools were used to speed up planning and implementation of the project. They 
 
 The main challenges AI could not solve on its own were environment-specific issues. In particular, dependency compatibility on Python 3.14 required manual adjustment of package versions, and MongoDB connectivity had to be debugged based on the local machine setup. AI could suggest likely fixes, but verifying runtime behavior, checking installed tools, and resolving infrastructure issues still required direct manual validation.
 
+## API Documentation
 
+### `GET /health`
+Basic health-check endpoint to confirm that the API is running.
 
+### `POST /admin/seed`
+Seeds the MongoDB `questions` collection with the GRE-style sample question bank.
 
-Challenges that still require human review:
+Response fields:
+- `inserted_count`: number of newly inserted questions
+- `updated_count`: number of existing questions updated by `question_id`
+- `total_questions`: total number of questions in the collection
 
-- dependency installation and runtime verification in the local environment
-- final API behavior checks with a real MongoDB instance
-- optional validation of the OpenAI integration path with a real API key
+### `POST /sessions`
+Creates a new adaptive test session and returns the first question.
+
+Response fields:
+- `session_id`: unique session identifier
+- `ability_score`: starting ability value
+- `question`: first question object
+- `remaining_questions`: number of questions left in the session
+
+### `POST /sessions/{session_id}/answers`
+Submits an answer for the current question, updates the student’s ability estimate, and returns either the next question or the final session summary.
+
+Request body:
+```json
+{
+  "question_id": "alg-001",
+  "selected_answer": "B"
+}
+
