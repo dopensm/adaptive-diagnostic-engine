@@ -159,33 +159,9 @@ The main challenges AI could not solve on its own were environment-specific issu
 
 ## API Documentation
 
-### `GET /health`
-Basic health-check endpoint to confirm that the API is running.
-
-### `POST /admin/seed`
-Seeds the MongoDB `questions` collection with the GRE-style sample question bank.
-
-Response fields:
-- `inserted_count`: number of newly inserted questions
-- `updated_count`: number of existing questions updated by `question_id`
-- `total_questions`: total number of questions in the collection
-
-### `POST /sessions`
-Creates a new adaptive test session and returns the first question.
-
-Response fields:
-- `session_id`: unique session identifier
-- `ability_score`: starting ability value
-- `question`: first question object
-- `remaining_questions`: number of questions left in the session
-
-### `POST /sessions/{session_id}/answers`
-Submits an answer for the current question, updates the student’s ability estimate, and returns either the next question or the final session summary.
-
-Request body:
-```json
-{
-  "question_id": "alg-001",
-  "selected_answer": "B"
-}
-
+- `GET /health`
+- `POST /admin/seed`
+- `POST /sessions`
+- `POST /sessions/{session_id}/answers`
+- `GET /sessions/{session_id}`
+- `POST /sessions/{session_id}/study-plan`
